@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import xyz.telecter.whatadvancements.command.AdvancementInfoCommand;
+import xyz.telecter.whatadvancements.command.AdvancementQueryCommand;
 
 public class WhatAdvancements implements ModInitializer {
 	public static final String MOD_ID = "whatadvancements";
@@ -14,7 +14,7 @@ public class WhatAdvancements implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, env) -> {
-			AdvancementInfoCommand.register(dispatcher, registryAccess);
+			AdvancementQueryCommand.register(dispatcher, registryAccess);
 		});
 	}
 }

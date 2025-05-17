@@ -6,6 +6,7 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.RegistryKeyArgumentType;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.CommandManager;
@@ -16,20 +17,24 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
-public class AdvancementInfoCommand {
+public class AdvancementQueryCommand {
 	public static void register(CommandDispatcher<ServerCommandSource> dispatcher,
 			CommandRegistryAccess commandRegistryAccess) {
-		dispatcher.register(CommandManager.literal("advancementinfo")
-				.then(CommandManager
-						.argument("advancement",
-								RegistryKeyArgumentType
-										.registryKey(RegistryKey.ofRegistry(Identifier.ofVanilla("advancement"))))
-						.executes(ctx -> {
-							ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
-							AdvancementEntry entry = RegistryKeyArgumentType.getAdvancementEntry(ctx, "advancement");
-							return execute(ctx.getSource(), player, entry);
-
-						})));
+		dispatcher.register(
+			CommandManager.literal("advancementquery")
+				.requires(source -> source.hasPermissionLevel(4))
+				.then(
+					CommandManager.argument("target", EntityArgumentType.player())
+					.then(
+						CommandManager.argument("advancement", RegistryKeyArgumentType.registryKey(RegistryKey.ofRegistry(Identifier.ofVanilla("advancement"))))
+						.executes((context) -> {
+							ServerPlayerEntity target = EntityArgumentType.getPlayer(context, "target");
+							AdvancementEntry entry = RegistryKeyArgumentType.getAdvancementEntry(context, "advancement");
+							return execute(context.getSource(), target, entry);
+						})
+					)
+				)
+		);
 	}
 
 	private static int execute(ServerCommandSource source, ServerPlayerEntity player, AdvancementEntry entry) {
@@ -55,7 +60,7 @@ public class AdvancementInfoCommand {
 			source.sendMessage(obtainedFeedback);
 		}
 		if (!progress.isDone()) {
-			source.sendMessage(Text.literal("The following criteria have been not been obtained:"));
+			source.sendMessage(Text.literal("The following criteria have not been obtained:"));
 			MutableText unobtainedFeedback = Text.empty();
 			for (String unobtained : progress.getUnobtainedCriteria()) {
 				unobtainedFeedback
