@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "whatadvancements",
+	"version": "1.0.0",
+	"name": "WhatAdvancements",
+	"description": "Allows you to view more info about advancements.",
+	"authors": [
+		"telecter"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/whatadvancements/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"xyz.telecter.whatadvancements.WhatAdvancements"
+		]
+	},
+	"mixins": [
+		"whatadvancements.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
